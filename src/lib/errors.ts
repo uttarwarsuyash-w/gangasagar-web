@@ -3,7 +3,7 @@ const KNOWN = new Set([
   'not_allowed', 'insufficient_stock', 'invalid_kind', 'invalid_quantity', 'invalid_transition',
   'payment_required', 'invalid_state', 'not_found', 'unavailable', 'not_signed_in', 'quotation_required',
   'invalid_payment_method', 'invalid_address', 'invalid_pincode', 'invalid_fulfilment', 'empty_cart',
-  'invalid_reference', 'invalid_request', 'duplicate',
+  'invalid_reference', 'invalid_request', 'duplicate', 'in_use',
 ]);
 
 /** Turns a Supabase/PostgREST error (or thrown Error) into one of our codes, or 'network' / 'unknown'. */
@@ -11,6 +11,8 @@ export function errorCode(err: unknown): string {
   if (!err) return 'unknown';
   const e = err as { message?: string; code?: string; name?: string };
   if (e.code === '23505') return 'duplicate';
+  // Foreign-key refusal: the row has stock history or orders (deletes are restricted to keep them).
+  if (e.code === '23503' || e.code === '23001') return 'in_use';
   const msg = (e.message ?? String(err)).trim();
   if (KNOWN.has(msg)) return msg;
   const found = [...KNOWN].find((k) => new RegExp(`\\b${k}\\b`).test(msg));

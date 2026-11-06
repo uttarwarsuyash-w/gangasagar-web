@@ -31,7 +31,10 @@ use that one everywhere below.
 1. **Authentication → Sign In / Providers → Google** (on older dashboards: **Authentication → Providers**).
    Turn it on, paste the Client ID and Client secret, and **Save**. Copy the Callback URL shown here
    into Google (step 5 above) if you have not yet.
-2. **Authentication → URL Configuration**:
+2. On the same page, turn **Email** off, and leave **Phone** and **Anonymous** sign-ins off.
+   The shop uses Google sign-in only; this stops anyone signing up with a password using an admin's email.
+   (The database also only gives admin rights to Google sign-ins.)
+3. **Authentication → URL Configuration**:
    - Site URL: `https://gangasagar.pages.dev`
    - Redirect URLs, add both:
      - `https://gangasagar.pages.dev/en/auth/callback/**`
@@ -39,7 +42,7 @@ use that one everywhere below.
 
      (The `**` lets the page remember where the customer was going.)
    - Optional, only for developers working on their computer: `http://localhost:3000/**`
-3. **Save**.
+4. **Save**.
 
 Sign-in only works on the main address above, not on Cloudflare's preview addresses.
 

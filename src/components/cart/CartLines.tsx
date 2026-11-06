@@ -39,7 +39,8 @@ export function CartLines({
         const err = lineErrors[item.variantId];
         const unavailable = err === 'unavailable';
         const loose = item.grams !== undefined;
-        const step = 250;
+        const step = line?.loose_step_g || 250;
+        const min = line?.loose_min_g || step;
         return (
           <li key={item.variantId} className={`flex flex-wrap items-center gap-3 px-4 py-3 ${unavailable ? 'bg-ink/5' : ''}`}>
             <div className="min-w-0 flex-1">
@@ -63,8 +64,8 @@ export function CartLines({
                   type="button"
                   className={stepBtn}
                   aria-label={sh.less}
-                  onClick={() => onSet(item.variantId, loose ? Math.max(step, (item.grams ?? step) - step) : (item.qty ?? 1) - 1)}
-                  disabled={loose ? (item.grams ?? 0) <= step : false}
+                  onClick={() => onSet(item.variantId, loose ? Math.max(min, (item.grams ?? min) - step) : (item.qty ?? 1) - 1)}
+                  disabled={loose ? (item.grams ?? 0) <= min : false}
                 >
                   <Minus aria-hidden className="h-4 w-4" />
                 </button>

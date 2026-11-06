@@ -4,7 +4,8 @@ import path from 'node:path';
 
 const root = path.resolve(__dirname, '../..');
 
-export type Who = 'anon' | 'service' | { userId: string; email: string };
+/** Signed-in users sign in with Google unless a test says otherwise (provider). */
+export type Who = 'anon' | 'service' | { userId: string; email: string; provider?: string };
 export type Query = <R = Record<string, unknown>>(sql: string, params?: unknown[]) => Promise<R[]>;
 
 export interface TestDb {
@@ -21,7 +22,10 @@ export const CUSTOMER_B = { userId: '00000000-0000-0000-0000-0000000000c2', emai
 function claimsFor(who: Who): { role: string; claims: Record<string, unknown> } {
   if (who === 'anon') return { role: 'anon', claims: { role: 'anon' } };
   if (who === 'service') return { role: 'service_role', claims: { role: 'service_role' } };
-  return { role: 'authenticated', claims: { sub: who.userId, email: who.email, role: 'authenticated' } };
+  return {
+    role: 'authenticated',
+    claims: { sub: who.userId, email: who.email, role: 'authenticated', app_metadata: { provider: who.provider ?? 'google' } },
+  };
 }
 
 export function migrationFiles(): string[] {

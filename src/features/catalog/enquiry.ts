@@ -9,8 +9,4 @@ export function buildProductEnquiryLink(name: string, url: string, lang: Lang): 
   return waLink(BUSINESS.whatsapp.main, fill(getDictionary(lang).shop.enquiryText, { name, url }));
 }
 
-export function siteUrl(): string {
-  const env = process.env.NEXT_PUBLIC_SITE_URL;
-  if (env && env.trim()) return env.replace(/\/+$/, '');
-  return typeof window !== 'undefined' ? window.location.origin : '';
-}
+export { siteUrl } from '@/lib/site-url';

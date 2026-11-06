@@ -21,7 +21,10 @@ stable
 security definer
 set search_path = public, pg_temp
 as $$
-  select exists (
+  -- Admins must have signed up with Google: an email/password sign-up using an admin's
+  -- address (possible if someone turns off email confirmation) never becomes an admin.
+  select coalesce(auth.jwt()->'app_metadata'->>'provider', '') = 'google'
+     and exists (
     select 1 from public.admins a
     where a.email = lower(coalesce(auth.jwt()->>'email', ''))
   )
@@ -185,7 +188,7 @@ create index variants_product_idx on public.variants (product_id);
 
 create table public.stock_movements (
   id uuid primary key default gen_random_uuid(),
-  variant_id uuid not null references public.variants (id) on delete cascade,
+  variant_id uuid not null references public.variants (id) on delete restrict,
   kind text not null check (kind in ('incoming','sale','damaged','expired','adjustment','cancellation_return')),
   qty numeric(12,3) not null,
   note text,
@@ -451,12 +454,16 @@ begin
     end if;
 
     v_ok := true;
+    v_min := null;
+    v_step := null;
+    if v_row.is_loose then
+      v_min := coalesce(v_row.loose_min_g, (v_quantities->>'loose_min_g')::int, 250);
+      v_step := coalesce(v_row.loose_step_g, (v_quantities->>'loose_step_g')::int, 250);
+    end if;
     if v_row.stock_label = 'Out of Stock' then
       v_errors := v_errors || jsonb_build_object('code', 'unavailable', 'variant_id', v_id_text);
       v_ok := false;
     elsif v_row.is_loose then
-      v_min := coalesce(v_row.loose_min_g, (v_quantities->>'loose_min_g')::int, 250);
-      v_step := coalesce(v_row.loose_step_g, (v_quantities->>'loose_step_g')::int, 250);
       if v_qty is not null or v_grams is null or v_grams <> trunc(v_grams)
          or v_grams < v_min or (v_grams::int % v_step) <> 0 then
         v_errors := v_errors || jsonb_build_object('code', 'invalid_quantity', 'variant_id', v_id_text);
@@ -491,7 +498,8 @@ begin
       'qty', case when v_row.is_loose then null else v_qty end,
       'grams', case when v_row.is_loose then v_grams else null end,
       'unit_price', v_unit, 'line_total', v_line_total, 'weight_g', v_line_weight,
-      'stock_label', v_row.stock_label, 'is_loose', v_row.is_loose);
+      'stock_label', v_row.stock_label, 'is_loose', v_row.is_loose,
+      'loose_min_g', v_min, 'loose_step_g', v_step);
   end loop;
 
   -- Zone and fulfilment.
@@ -586,7 +594,7 @@ create index orders_status_idx on public.orders (status, created_at desc);
 create table public.order_items (
   id uuid primary key default gen_random_uuid(),
   order_id uuid not null references public.orders (id) on delete cascade,
-  variant_id uuid references public.variants (id) on delete set null,
+  variant_id uuid references public.variants (id) on delete restrict,
   product_name_en text,
   product_name_hi text,
   label_en text,

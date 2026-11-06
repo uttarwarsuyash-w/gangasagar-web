@@ -35,7 +35,7 @@ create index orders_status_idx on public.orders (status, created_at desc);
 create table public.order_items (
   id uuid primary key default gen_random_uuid(),
   order_id uuid not null references public.orders (id) on delete cascade,
-  variant_id uuid references public.variants (id) on delete set null,
+  variant_id uuid references public.variants (id) on delete restrict,
   product_name_en text,
   product_name_hi text,
   label_en text,

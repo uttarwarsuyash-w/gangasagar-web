@@ -68,7 +68,7 @@ create index variants_product_idx on public.variants (product_id);
 
 create table public.stock_movements (
   id uuid primary key default gen_random_uuid(),
-  variant_id uuid not null references public.variants (id) on delete cascade,
+  variant_id uuid not null references public.variants (id) on delete restrict,
   kind text not null check (kind in ('incoming','sale','damaged','expired','adjustment','cancellation_return')),
   qty numeric(12,3) not null,
   note text,

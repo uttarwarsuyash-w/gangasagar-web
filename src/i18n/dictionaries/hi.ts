@@ -51,6 +51,7 @@ const hi: DeepPartial<Dictionary> = {
     somethingWrong: 'कुछ गड़बड़ हो गई। कृपया फिर से कोशिश करें।',
   },
   auth: {
+    signIn: 'साइन इन',
     signInWithGoogle: 'Google से साइन इन करें',
     signInPrompt: 'आगे बढ़ने के लिए कृपया अपने Google खाते से साइन इन करें।',
     adminsOnly: 'यह हिस्सा केवल दुकान के एडमिन के लिए है।',
@@ -214,6 +215,7 @@ const hi: DeepPartial<Dictionary> = {
     history: 'अपडेट',
     invoice: 'बिल',
     placedOn: 'ऑर्डर की तारीख',
+    orderLink: 'अपना ऑर्डर देखें:',
     orderUpdate: 'गंगासागर, नांदेड़ की ओर से नमस्ते। आपका ऑर्डर {number} ({total}) अब: {status}। धन्यवाद!',
     questions: 'इस ऑर्डर के बारे में सवाल?',
   },
@@ -307,6 +309,7 @@ const hi: DeepPartial<Dictionary> = {
       not_found: 'नहीं मिला। शायद हटा दिया गया है।',
       unavailable: 'इस ऑर्डर का एक सामान अब कैटलॉग में नहीं है।',
       network: 'इंटरनेट नहीं है। जांच कर फिर कोशिश करें।',
+      in_use: 'इसका स्टॉक इतिहास या ऑर्डर है, इसलिए इसे हटाया नहीं जा सकता। छिपाने के लिए “दुकान में दिखाएं” का निशान हटाएँ।',
       unknown: 'कुछ गड़बड़ हो गई। कृपया फिर से कोशिश करें।',
     },
     ordersPage: {

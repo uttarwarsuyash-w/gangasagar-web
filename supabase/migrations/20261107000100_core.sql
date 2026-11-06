@@ -15,7 +15,10 @@ stable
 security definer
 set search_path = public, pg_temp
 as $$
-  select exists (
+  -- Admins must have signed up with Google: an email/password sign-up using an admin's
+  -- address (possible if someone turns off email confirmation) never becomes an admin.
+  select coalesce(auth.jwt()->'app_metadata'->>'provider', '') = 'google'
+     and exists (
     select 1 from public.admins a
     where a.email = lower(coalesce(auth.jwt()->>'email', ''))
   )

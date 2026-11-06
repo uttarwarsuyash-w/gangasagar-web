@@ -79,6 +79,14 @@ describe('price_cart lines', () => {
     expect(p.errors).toContainEqual({ code: 'invalid_quantity', variant_id: id });
   });
 
+  it('tells the cart the minimum and step of each loose line', async () => {
+    const id = await makeVariant(db, { is_loose: true, retail_price: 200, loose_min_g: 500, loose_step_g: 500 });
+    const p = await price([{ variant_id: id, grams: 1000 }], null, 'pickup');
+    expect(p.lines[0]).toMatchObject({ loose_min_g: 500, loose_step_g: 500 });
+    const bad = await price([{ variant_id: id, grams: 750 }], null, 'pickup');
+    expect(bad.lines[0]).toMatchObject({ loose_min_g: 500, loose_step_g: 500 });
+  });
+
   it('prices 250 g of loose at ₹200/kg as ₹50.00', async () => {
     const id = await makeVariant(db, { is_loose: true, retail_price: 200 });
     const p = await price([{ variant_id: id, grams: 250 }], null, 'pickup');

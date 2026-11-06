@@ -45,6 +45,7 @@ const en = {
     somethingWrong: 'Something went wrong. Please try again.',
   },
   auth: {
+    signIn: 'Sign in',
     signInWithGoogle: 'Sign in with Google',
     signInPrompt: 'Please sign in with your Google account to continue.',
     adminsOnly: 'This area is for shop admins only.',
@@ -208,6 +209,7 @@ const en = {
     history: 'Updates',
     invoice: 'Invoice',
     placedOn: 'Placed on',
+    orderLink: 'See your order:',
     orderUpdate: 'Namaste from Gangasagar, Nanded. Your order {number} ({total}) is now: {status}. Thank you!',
     questions: 'Questions about this order?',
   },
@@ -228,7 +230,7 @@ const en = {
     deleteProductTitle: 'Delete this product?',
     deleteProductMessage: 'The product and all its variants will be removed from the shop. Past orders keep their details.',
     deleteVariantTitle: 'Delete this variant?',
-    deleteVariantMessage: 'This size or pack will be removed from the shop.',
+    deleteVariantMessage: 'This size or pack will be removed from the shop. A size with stock history or orders can only be hidden.',
     deleteLabel: 'Delete',
     deleteNamed: 'Delete {name}',
     editNamed: 'Edit {name}',
@@ -301,6 +303,7 @@ const en = {
       not_found: 'Not found. It may have been deleted.',
       unavailable: 'An item in this order is no longer in the catalogue.',
       network: 'No connection. Check the internet and try again.',
+      in_use: 'This has stock history or orders, so it cannot be deleted. Untick “Show in shop” to hide it instead.',
       unknown: 'Something went wrong. Please try again.',
     },
     ordersPage: {

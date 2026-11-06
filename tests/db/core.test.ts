@@ -28,6 +28,11 @@ describe('is_admin()', () => {
     const [r] = await db.as('anon', (q) => q<{ v: boolean }>('select public.is_admin() as v'));
     expect(r.v).toBe(false);
   });
+  it('is false for an admin email that did not sign in with Google (e.g. an email/password sign-up)', async () => {
+    const who = { userId: '00000000-0000-0000-0000-0000000000e1', email: ADMIN.email, provider: 'email' };
+    const [r] = await db.as(who, (q) => q<{ v: boolean }>('select public.is_admin() as v'));
+    expect(r.v).toBe(false);
+  });
 });
 
 describe('profiles', () => {

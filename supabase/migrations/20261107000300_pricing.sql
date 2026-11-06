@@ -99,12 +99,16 @@ begin
     end if;
 
     v_ok := true;
+    v_min := null;
+    v_step := null;
+    if v_row.is_loose then
+      v_min := coalesce(v_row.loose_min_g, (v_quantities->>'loose_min_g')::int, 250);
+      v_step := coalesce(v_row.loose_step_g, (v_quantities->>'loose_step_g')::int, 250);
+    end if;
     if v_row.stock_label = 'Out of Stock' then
       v_errors := v_errors || jsonb_build_object('code', 'unavailable', 'variant_id', v_id_text);
       v_ok := false;
     elsif v_row.is_loose then
-      v_min := coalesce(v_row.loose_min_g, (v_quantities->>'loose_min_g')::int, 250);
-      v_step := coalesce(v_row.loose_step_g, (v_quantities->>'loose_step_g')::int, 250);
       if v_qty is not null or v_grams is null or v_grams <> trunc(v_grams)
          or v_grams < v_min or (v_grams::int % v_step) <> 0 then
         v_errors := v_errors || jsonb_build_object('code', 'invalid_quantity', 'variant_id', v_id_text);
@@ -139,7 +143,8 @@ begin
       'qty', case when v_row.is_loose then null else v_qty end,
       'grams', case when v_row.is_loose then v_grams else null end,
       'unit_price', v_unit, 'line_total', v_line_total, 'weight_g', v_line_weight,
-      'stock_label', v_row.stock_label, 'is_loose', v_row.is_loose);
+      'stock_label', v_row.stock_label, 'is_loose', v_row.is_loose,
+      'loose_min_g', v_min, 'loose_step_g', v_step);
   end loop;
 
   -- Zone and fulfilment.

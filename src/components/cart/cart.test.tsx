@@ -117,6 +117,22 @@ describe('CartView', () => {
     expect(await screen.findByText('₹89')).toBeInTheDocument();
   });
 
+  it('steps a loose line by its own minimum and step, not a fixed 250 g', async () => {
+    const user = userEvent.setup();
+    add({ variantId: 'v1', grams: 1000 });
+    priceCart.mockImplementation(async (items: Array<{ grams?: number }>) =>
+      price({ lines: [line({ qty: null, grams: items[0].grams ?? 0, is_loose: true, loose_min_g: 500, loose_step_g: 500 })] }),
+    );
+    render(<CartView lang="en" />);
+    const group = await screen.findByRole('group', { name: en.shop.weight });
+    await user.click(within(group).getByRole('button', { name: en.shop.more }));
+    expect(await within(group).findByText('1.5 kg')).toBeInTheDocument();
+    await user.click(within(group).getByRole('button', { name: en.shop.less }));
+    await user.click(within(group).getByRole('button', { name: en.shop.less }));
+    expect(await within(group).findByText('500 g')).toBeInTheDocument();
+    expect(within(group).getByRole('button', { name: en.shop.less })).toBeDisabled();
+  });
+
   it('shows the empty state', () => {
     render(<CartView lang="en" />);
     expect(screen.getByText(en.cart.empty)).toBeInTheDocument();

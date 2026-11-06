@@ -8,6 +8,10 @@ describe('errorCode', () => {
   it('maps unique violations to duplicate', () => {
     expect(errorCode({ message: 'duplicate key value violates unique constraint', code: '23505' })).toBe('duplicate');
   });
+  it('maps foreign-key refusals to in_use', () => {
+    expect(errorCode({ message: 'update or delete on table "variants" violates foreign key constraint', code: '23503' })).toBe('in_use');
+    expect(errorCode({ message: 'update or delete on table "variants" violates RESTRICT setting of foreign key constraint', code: '23001' })).toBe('in_use');
+  });
   it('recognises network failures', () => {
     expect(errorCode(new TypeError('Failed to fetch'))).toBe('network');
   });

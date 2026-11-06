@@ -29,3 +29,14 @@ describe('statusMessage', () => {
     expect(m).toMatch(/[ऀ-ॿ]/);
   });
 });
+
+describe('statusMessage order link', () => {
+  it('links the customer back to their order page (where outside-Nanded orders are paid)', () => {
+    const m = statusMessage({ id: 'o-123', number: 'GKS-2611-00012', total: 389 }, 'Order Confirmed', 'en');
+    expect(m).toContain(`${window.location.origin}/en/account/order/?id=o-123`);
+  });
+  it('uses the Hindi page for a Hindi message', () => {
+    const m = statusMessage({ id: 'o-123', number: 'GKS-2611-00012', total: 389 }, 'Order Confirmed', 'hi');
+    expect(m).toContain('/hi/account/order/?id=o-123');
+  });
+});

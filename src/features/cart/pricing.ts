@@ -24,6 +24,9 @@ export interface PricedLine {
   weight_g: number;
   stock_label: StockLabel | null;
   is_loose?: boolean;
+  /** Loose lines only: the smallest amount and the step in grams. */
+  loose_min_g?: number | null;
+  loose_step_g?: number | null;
 }
 
 export interface CartPrice {

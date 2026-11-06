@@ -96,6 +96,44 @@ describe('CheckoutForm', () => {
     await waitFor(() => expect(push).toHaveBeenCalledWith('/en/account/order/?id=order-2&placed=1'));
   });
 
+  it('never places an order with a pickup/delivery choice that is still being priced', async () => {
+    const user = userEvent.setup();
+    const pickupPrice = { price: { ...nandedPrice.price, zone: null, delivery_fee: 0, total: 300 }, fulfilment: 'pickup' };
+    let resolvePickup: (v: unknown) => void = () => {};
+    render(<CheckoutForm lang="en" />);
+    await fill(user);
+    expect(await screen.findByText('₹389')).toBeInTheDocument();
+    priceForMode.mockImplementation(() => new Promise((r) => (resolvePickup = r)));
+    await user.click(screen.getByLabelText(en.cart.pickup));
+    await user.click(screen.getByRole('button', { name: en.checkout.placeOrder }));
+    expect(placeOrder).not.toHaveBeenCalled();
+    resolvePickup(pickupPrice);
+    placeOrder.mockResolvedValue('order-p');
+    await waitFor(() => expect(screen.queryByText('₹389')).not.toBeInTheDocument());
+    await user.click(screen.getByRole('button', { name: en.checkout.placeOrder }));
+    await waitFor(() => expect(placeOrder).toHaveBeenCalledTimes(1));
+    expect(placeOrder.mock.calls[0][0]).toMatchObject({ fulfilment: 'pickup', pincode: null });
+  });
+
+  it('re-prices instead of using an old price when the last price check failed', async () => {
+    const user = userEvent.setup();
+    const pickupPrice = { price: { ...nandedPrice.price, zone: null, delivery_fee: 0, total: 300 }, fulfilment: 'pickup' };
+    render(<CheckoutForm lang="en" />);
+    await fill(user);
+    expect(await screen.findByText('₹389')).toBeInTheDocument();
+    priceForMode.mockRejectedValueOnce(new TypeError('Failed to fetch'));
+    priceForMode.mockResolvedValue(pickupPrice);
+    await user.click(screen.getByLabelText(en.cart.pickup));
+    expect(await screen.findByText(en.checkout.errors.network)).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: en.checkout.placeOrder }));
+    expect(placeOrder).not.toHaveBeenCalled();
+    placeOrder.mockResolvedValue('order-r');
+    await waitFor(() => expect(screen.queryByText('₹389')).not.toBeInTheDocument());
+    await user.click(screen.getByRole('button', { name: en.checkout.placeOrder }));
+    await waitFor(() => expect(placeOrder).toHaveBeenCalledTimes(1));
+    expect(placeOrder.mock.calls[0][0]).toMatchObject({ fulfilment: 'pickup' });
+  });
+
   it('does not submit an invalid phone', async () => {
     const user = userEvent.setup();
     render(<CheckoutForm lang="en" />);

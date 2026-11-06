@@ -1,7 +1,8 @@
 # 4. First admin steps
 
-Sign in at `https://gangasagar.pages.dev/en/` with **Sign in with Google**, using one of the admin
-emails (`uttarwarsuyash@gmail.com` or `lguttarwar1974.11@gmail.com`). An **Admin** link appears in the header.
+Open `https://gangasagar.pages.dev/en/` and tap **Sign in** at the top right (on a phone it is the arrow icon).
+Choose one of the admin Google accounts (`uttarwarsuyash@gmail.com` or `lguttarwar1974.11@gmail.com`).
+An **Admin** link appears in the header. **Sign out** is next to it.
 
 ## 1. Nanded pincodes (Supabase)
 
@@ -51,7 +52,7 @@ Redeploy in Cloudflare (guide 3, *Redeploy after adding products*). The products
 ## Check everything works (on a phone)
 
 1. As admin: add a category, a product with two variants, stock, and the UPI ID. Redeploy.
-2. As a customer (another Google account): add items, choose **Deliver to my address**, enter `431602`,
+2. Tap **Sign out**, then sign in again with another Google account (the customer). Add items, choose **Deliver to my address**, enter `431602`,
    and check the delivery charge: ₹89 under 2 kg, ₹49 from 2 kg, and free when the items come to ₹499 or more.
    Place the order.
 3. As admin: **Admin → Orders** → open the order → **Confirm order** → **Record payment** →

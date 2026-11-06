@@ -36,7 +36,8 @@ export function CheckoutForm({ lang }: { lang: Lang }) {
   const [address, setAddress] = useState<AddressInput>({ name: '', phone: '', line1: '', line2: '', landmark: '', city: '', state: '', pincode: params.get('pin') ?? '' });
   const [note, setNote] = useState('');
   const [payment, setPayment] = useState<PaymentMethod>('cash');
-  const [priced, setPriced] = useState<{ price: CartPrice; fulfilment: Fulfilment | null } | null>(null);
+  const [priced, setPriced] = useState<{ key: string; price: CartPrice; fulfilment: Fulfilment | null } | null>(null);
+  const [retry, setRetry] = useState(0);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -44,22 +45,29 @@ export function CheckoutForm({ lang }: { lang: Lang }) {
 
   const pin = normalizePincode(address.pincode);
   const itemsKey = JSON.stringify(items);
+  // The price (and the pickup/delivery choice it carries) is only used for the inputs it was made for.
+  const priceKey = JSON.stringify([itemsKey, mode, mode === 'ship' ? pin : null, outside]);
 
   useEffect(() => {
     if (items.length === 0) return;
     let active = true;
     priceForMode(items, mode, mode === 'ship' ? pin : null, outside).then(
-      (r) => active && setPriced(r),
+      (r) => {
+        if (!active) return;
+        setPriced({ key: priceKey, ...r });
+        setFormError(null);
+      },
       () => active && setFormError(c.errors.network),
     );
     return () => {
       active = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [itemsKey, mode, pin, outside]);
+  }, [priceKey, retry]);
 
-  const zone = priced?.price.zone ?? null;
-  const fulfilment = priced?.fulfilment ?? null;
+  const current = priced?.key === priceKey ? priced : null;
+  const zone = current?.price.zone ?? null;
+  const fulfilment = current?.fulfilment ?? null;
   const allowed = allowedPaymentMethods(zone, fulfilment);
   const effectivePayment = allowed.includes(payment) ? payment : allowed[0];
 
@@ -81,6 +89,12 @@ export function CheckoutForm({ lang }: { lang: Lang }) {
   async function submit() {
     if (inFlight.current) return;
     setFormError(null);
+    if (mode && !current) {
+      // Still pricing the latest choice (or the last check failed): price again, never submit the old choice.
+      setFormError(t.cart.updating);
+      setRetry((r) => r + 1);
+      return;
+    }
     if (!mode || !fulfilment) {
       setFormError(c.chooseHow);
       return;
