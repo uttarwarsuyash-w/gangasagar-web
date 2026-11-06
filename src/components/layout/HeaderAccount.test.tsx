@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { makeSupabaseMock } from '@/test/supabase-mock';
@@ -10,18 +10,34 @@ vi.mock('next/navigation', () => ({ usePathname: () => '/en/shop/' }));
 
 import { SessionProvider } from '@/lib/auth/session';
 import { HeaderAccount } from './HeaderAccount';
+import { ToastProvider } from '@/components/ui/Toast';
 
 const en = getDictionary('en');
 const show = (opts: Parameters<typeof makeSupabaseMock>[0]) => {
   holder.mock = makeSupabaseMock(opts);
   return render(
-    <SessionProvider>
-      <HeaderAccount lang="en" />
-    </SessionProvider>,
+    <ToastProvider closeLabel="Close">
+      <SessionProvider>
+        <HeaderAccount lang="en" />
+      </SessionProvider>
+    </ToastProvider>,
   );
 };
 
 describe('HeaderAccount', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it('explains that sign-in is not set up yet when Supabase is not connected', async () => {
+    vi.stubEnv('NEXT_PUBLIC_SUPABASE_URL', '');
+    const user = userEvent.setup();
+    show({ user: null });
+    await user.click(await screen.findByRole('button', { name: en.auth.signIn }));
+    expect(await screen.findByText(en.auth.notConfigured)).toBeInTheDocument();
+    expect(holder.mock.auth.signInWithOAuth).not.toHaveBeenCalled();
+  });
+
   it('offers Sign in to a visitor and returns them to the same page', async () => {
     const user = userEvent.setup();
     show({ user: null });

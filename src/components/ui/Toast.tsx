@@ -52,7 +52,7 @@ export function ToastProvider({ children, closeLabel = 'Close' }: { children: Re
           <div
             key={t.id}
             role={t.kind === 'error' ? 'alert' : 'status'}
-            className={`pointer-events-auto flex w-full max-w-md items-start gap-2 rounded-xl px-4 py-3 shadow-lg ${
+            className={`pointer-events-auto flex w-full max-w-md animate-toast-in items-start gap-2 rounded-xl px-4 py-3 shadow-lg ${
               t.kind === 'error' ? 'bg-brand-dark text-white' : 'bg-ink text-white'
             }`}
           >

@@ -1,7 +1,6 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Package } from 'lucide-react';
 import { useLiveVariants } from '@/features/catalog/live';
 import type { PublicProduct } from '@/features/catalog/types';
 import { localHref, pick } from '@/i18n/localized';
@@ -20,14 +19,22 @@ export function ProductView({ lang, product }: { lang: Lang; product: PublicProd
   const image = product.images[active];
 
   return (
-    <div className="grid gap-6 md:grid-cols-2">
-      <div>
-        <div className="flex aspect-square items-center justify-center overflow-hidden rounded-2xl bg-brand-light/50">
+    <div className="grid gap-6 md:grid-cols-2" data-product-root>
+      <div className="animate-rise">
+        <div className="group flex aspect-square items-center justify-center overflow-hidden rounded-3xl bg-accent-light shadow-[0_6px_0_var(--color-accent)]">
           {image ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={image} alt={name} className="h-full w-full object-cover" />
+            <img
+              key={image}
+              src={image}
+              alt={name}
+              data-fly-source
+              className="h-full w-full animate-fade-in object-cover transition duration-700 group-hover:scale-110"
+            />
           ) : (
-            <Package aria-hidden className="h-16 w-16 text-brand/40" />
+            <span data-fly-source aria-hidden className="font-display text-[9rem] leading-none text-brand/70 animate-bob">
+              {name.slice(0, 1)}
+            </span>
           )}
         </div>
         {product.images.length > 1 && (
@@ -50,7 +57,7 @@ export function ProductView({ lang, product }: { lang: Lang; product: PublicProd
       </div>
       <div>
         {product.brand && <p className="text-sm font-semibold uppercase tracking-wide text-ink/60">{product.brand}</p>}
-        <h1 className="text-3xl font-bold">{name}</h1>
+        <h1 className="animate-rise font-display text-5xl leading-none font-semibold text-brand-dark">{name}</h1>
         {description && <p className="mt-3 whitespace-pre-line text-ink/80">{description}</p>}
         <div className="mt-6">
           <VariantPicker key={variants.map((v) => v.id).join(',')} lang={lang} variants={variants} />

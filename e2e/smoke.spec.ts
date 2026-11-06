@@ -74,8 +74,10 @@ function watchConsole(page: Page): string[] {
 }
 
 let errors: string[] = [];
-test.beforeEach(async ({ page }) => {
+test.beforeEach(async ({ page }, info) => {
   errors = watchConsole(page);
+  // The shop-shutter intro covers the page for about 3 seconds; only the intro test watches it.
+  if (!info.title.includes('shutter')) await page.addInitScript(() => sessionStorage.setItem('gks-intro-seen', '1'));
 });
 test.afterEach(() => {
   expect(errors, 'console errors').toEqual([]);
@@ -137,4 +139,15 @@ test('dialogs close with Escape', async ({ page }) => {
   await page.keyboard.press('Escape');
   await expect(dialog).toBeHidden();
   await expect(page.getByRole('button', { name: 'Change stock for Fixture Dal 1.5 kg' })).toBeFocused();
+});
+
+test('the shop shutter plays on the first visit, then gets out of the way', async ({ page }) => {
+  await fakeSupabase(page);
+  await page.goto('/en/');
+  const shutter = page.locator('.shutter');
+  await expect(shutter).toBeVisible();
+  await expect(shutter).toBeHidden({ timeout: 5000 });
+  await page.reload();
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+  await expect(shutter).toBeHidden();
 });

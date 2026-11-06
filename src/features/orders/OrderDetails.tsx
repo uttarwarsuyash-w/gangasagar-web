@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, type ReactNode } from 'react';
-import { CheckCircle2, MessageCircle, QrCode } from 'lucide-react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { MessageCircle, QrCode } from 'lucide-react';
 import { TextField, buttonPrimary } from '@/components/ui/Field';
 import { BUSINESS } from '@/config/business';
 import { getDictionary } from '@/i18n/get-dictionary';
@@ -9,6 +9,7 @@ import { pick } from '@/i18n/localized';
 import type { Lang } from '@/i18n/types';
 import { errorCode, fill } from '@/lib/errors';
 import { formatRupees, formatWeight } from '@/lib/money';
+import { burstFrom } from '@/lib/motion/motion';
 import { waLink } from '@/lib/whatsapp';
 import { submitPaymentReference, type MyOrder, type PaymentSettings } from './api';
 
@@ -89,6 +90,24 @@ function UpiBox({ lang, order, payment, onChanged }: { lang: Lang; order: MyOrde
   );
 }
 
+/** The "order placed" moment: a green stamp with a check that draws itself, and a burst of grains. */
+function PlacedBanner({ text }: { text: string }) {
+  const ref = useRef<HTMLParagraphElement>(null);
+  useEffect(() => {
+    const id = window.setTimeout(() => burstFrom(ref.current, 70), 300);
+    return () => window.clearTimeout(id);
+  }, []);
+  return (
+    <p ref={ref} role="status" className="flex animate-stamp items-center gap-3 rounded-2xl bg-leaf p-4 text-lg font-semibold text-white shadow-[0_6px_0_#1E5A21]">
+      <svg viewBox="0 0 24 24" aria-hidden className="h-9 w-9 shrink-0">
+        <circle cx="12" cy="12" r="11" fill="#fff" />
+        <path d="M6.5 12.5l3.6 3.6 7.4-8" fill="none" stroke="#2F7D32" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="48" className="animate-draw" />
+      </svg>
+      {text}
+    </p>
+  );
+}
+
 export function OrderDetails({
   lang,
   order,
@@ -119,13 +138,9 @@ export function OrderDetails({
 
   return (
     <div className="space-y-5">
-      {placed && (
-        <p role="status" className="flex items-center gap-2 rounded-2xl bg-green-50 p-4 text-lg font-semibold text-green-900">
-          <CheckCircle2 aria-hidden className="h-6 w-6" /> {o.thanks}
-        </p>
-      )}
+      {placed && <PlacedBanner text={o.thanks} />}
       <div className="flex flex-wrap items-baseline gap-3">
-        <h1 className="text-2xl font-bold">{fill(o.title, { number: order.number })}</h1>
+        <h1 className="animate-rise font-display text-4xl leading-none font-semibold text-brand-dark">{fill(o.title, { number: order.number })}</h1>
         <span className="rounded-full bg-brand px-3 py-1 text-sm font-semibold text-white">{status(order.status)}</span>
       </div>
       <p className="text-sm text-ink/60">

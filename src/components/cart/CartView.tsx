@@ -1,5 +1,6 @@
 'use client';
 
+import { AnimatedNumber } from '@/lib/motion/AnimatedNumber';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -88,7 +89,7 @@ export function CartView({ lang }: { lang: Lang }) {
   if (items.length === 0) {
     return (
       <div className="mx-auto max-w-md rounded-2xl border border-brand/15 bg-white p-8 text-center">
-        <ShoppingBag aria-hidden className="mx-auto h-10 w-10 text-brand/50" />
+        <ShoppingBag aria-hidden className="mx-auto h-14 w-14 animate-bob text-brand/60" />
         <p className="mt-3 text-xl font-semibold">{c.empty}</p>
         <Link href={localHref(lang, '/shop/')} className={`${buttonPrimary} mt-4`}>
           {c.continueShopping}
@@ -136,7 +137,7 @@ export function CartView({ lang }: { lang: Lang }) {
       </div>
 
       <aside className="space-y-4">
-        <fieldset className="rounded-2xl border border-ink/10 bg-white p-4">
+        <fieldset className="animate-rise rounded-2xl border border-ink/10 bg-white p-4">
           <legend className="px-1 font-semibold">{c.howToGet}</legend>
           <div className="space-y-2">
             {(['pickup', 'ship'] as const).map((m) => (
@@ -179,21 +180,29 @@ export function CartView({ lang }: { lang: Lang }) {
           )}
         </fieldset>
 
-        <dl className="space-y-1 rounded-2xl border border-ink/10 bg-white p-4">
+        <dl className="space-y-1 rounded-2xl border border-ink/10 bg-white p-4 shadow-[0_6px_0_var(--color-accent)]">
           <div className="flex justify-between">
             <dt>{c.subtotal}</dt>
-            <dd className="font-semibold">{formatRupees(price.subtotal)}</dd>
+            <dd className="font-semibold">
+              <AnimatedNumber value={price.subtotal} format={formatRupees} />
+            </dd>
           </div>
           <div className="flex justify-between text-sm text-ink/70">
             <dt>{c.weight}</dt>
-            <dd>{formatWeight(price.weight_g)}</dd>
+            <dd>
+              <AnimatedNumber value={price.weight_g} format={formatWeight} />
+            </dd>
           </div>
           {!price.requires_quotation && (
             <div className="flex justify-between">
               <dt>{c.delivery}</dt>
               <dd className="font-semibold">
                 {feeKnown ? (
-                  price.delivery_fee === 0 ? c.free : formatRupees(price.delivery_fee)
+                  price.delivery_fee === 0 ? (
+                    <span className="inline-block animate-stamp rounded-full bg-leaf px-2 text-white">{c.free}</span>
+                  ) : (
+                    <span key={price.delivery_fee} className="inline-block animate-pop">{formatRupees(price.delivery_fee as number)}</span>
+                  )
                 ) : (
                   <span className="text-sm font-normal text-ink/60">{mode === 'ship' ? c.enterPincodeForFee : '—'}</span>
                 )}
@@ -203,7 +212,9 @@ export function CartView({ lang }: { lang: Lang }) {
           {feeKnown && price.total !== null && (
             <div className="flex justify-between border-t border-ink/10 pt-2 text-lg">
               <dt className="font-semibold">{c.total}</dt>
-              <dd className="font-bold text-brand-dark">{formatRupees(price.total)}</dd>
+              <dd className="font-display text-3xl leading-none text-brand-dark">
+                <AnimatedNumber value={price.total} format={formatRupees} />
+              </dd>
             </div>
           )}
         </dl>

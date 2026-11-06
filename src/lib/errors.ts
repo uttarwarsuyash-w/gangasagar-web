@@ -3,7 +3,7 @@ const KNOWN = new Set([
   'not_allowed', 'insufficient_stock', 'invalid_kind', 'invalid_quantity', 'invalid_transition',
   'payment_required', 'invalid_state', 'not_found', 'unavailable', 'not_signed_in', 'quotation_required',
   'invalid_payment_method', 'invalid_address', 'invalid_pincode', 'invalid_fulfilment', 'empty_cart',
-  'invalid_reference', 'invalid_request', 'duplicate', 'in_use',
+  'invalid_reference', 'invalid_request', 'duplicate', 'in_use', 'not_configured',
 ]);
 
 /** Turns a Supabase/PostgREST error (or thrown Error) into one of our codes, or 'network' / 'unknown'. */

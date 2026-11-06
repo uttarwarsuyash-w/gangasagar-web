@@ -17,7 +17,7 @@ export default async function ShopPage({ params }: Props) {
   const catalog = await fetchCatalog();
   return (
     <div className="mx-auto max-w-6xl px-4 py-6">
-      <h1 className="mb-4 text-3xl font-bold">{getDictionary(lang).shop.title}</h1>
+      <h1 className="mb-5 inline-block animate-rise border-b-4 border-accent pb-1 font-display text-5xl leading-none font-semibold text-brand-dark">{getDictionary(lang).shop.title}</h1>
       <ShopBrowser lang={lang} catalog={catalog} />
     </div>
   );

@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { Package } from 'lucide-react';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { localHref, pick } from '@/i18n/localized';
 import type { Lang } from '@/i18n/types';
@@ -22,14 +21,16 @@ export function ProductCard({ lang, product }: { lang: Lang; product: PublicProd
   const cheapest = variants.length ? variants.reduce((a, b) => (a.price <= b.price ? a : b)) : null;
   const image = product.images[0];
   return (
-    <article className="group overflow-hidden rounded-2xl border border-ink/10 bg-white shadow-sm transition hover:shadow-md">
+    <article className="group h-full overflow-hidden rounded-2xl border border-ink/10 bg-white shadow-sm transition duration-300 ease-out hover:-translate-y-1.5 hover:-rotate-1 hover:border-brand/40 hover:shadow-[0_10px_0_var(--color-accent)] active:scale-95">
       <Link href={localHref(lang, `/product/${product.slug}/`)} className="block">
-        <div className="flex aspect-square items-center justify-center bg-brand-light/50">
+        <div className="flex aspect-square items-center justify-center overflow-hidden bg-accent-light">
           {image ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={thumbUrl(image)} alt="" loading="lazy" className="h-full w-full object-cover" />
+            <img src={thumbUrl(image)} alt="" loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-110 group-hover:rotate-2" />
           ) : (
-            <Package aria-hidden className="h-12 w-12 text-brand/40" />
+            <span aria-hidden className="font-display text-7xl leading-none text-brand/70 transition duration-500 group-hover:scale-125 group-hover:-rotate-6">
+              {name.slice(0, 1)}
+            </span>
           )}
         </div>
         <div className="p-3">
@@ -38,7 +39,7 @@ export function ProductCard({ lang, product }: { lang: Lang; product: PublicProd
           {cheapest && (
             <p className="mt-1">
               {variants.length > 1 && <span className="text-sm text-ink/60">{t.from} </span>}
-              <span className="font-bold text-brand-dark">{formatRupees(cheapest.price)}</span>
+              <span className="font-display text-2xl leading-none text-brand-dark">{formatRupees(cheapest.price)}</span>
               {cheapest.is_loose && <span className="text-sm text-ink/60"> {t.perKg}</span>}
             </p>
           )}

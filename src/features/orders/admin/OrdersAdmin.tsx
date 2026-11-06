@@ -45,7 +45,7 @@ export function OrdersAdmin({ lang }: { lang: Lang }) {
 
   return (
     <section>
-      <h1 className="text-2xl font-bold">{o.title}</h1>
+      <h1 className="font-display text-4xl leading-none font-semibold text-brand-dark animate-rise">{o.title}</h1>
       <form
         className="mt-4 grid gap-3 rounded-2xl border border-ink/10 bg-white p-4 sm:grid-cols-2 lg:grid-cols-3"
         onSubmit={(e) => {

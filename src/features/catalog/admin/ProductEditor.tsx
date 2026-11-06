@@ -133,7 +133,7 @@ export function ProductEditor({ lang }: { lang: Lang }) {
       <Link href={localHref(lang, '/admin/products/')} className="inline-flex items-center gap-1 text-brand-dark hover:underline">
         <ArrowLeft aria-hidden className="h-4 w-4" /> {t.admin.products}
       </Link>
-      <h1 className="mt-2 text-2xl font-bold">{form.id ? t.admin.editProduct : t.admin.newProduct}</h1>
+      <h1 className="mt-2 font-display text-4xl leading-none font-semibold text-brand-dark animate-rise">{form.id ? t.admin.editProduct : t.admin.newProduct}</h1>
 
       <form
         className="mt-4 grid gap-4 rounded-2xl border border-ink/10 bg-white p-5 sm:grid-cols-2"

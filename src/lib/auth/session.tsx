@@ -3,6 +3,8 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import type { User } from '@supabase/supabase-js';
 import { getSupabase } from '@/lib/supabase/client';
+import { isSupabaseConfigured } from '@/lib/supabase/configured';
+import { AppError } from '@/lib/errors';
 
 interface SessionState {
   user: User | null;
@@ -49,6 +51,8 @@ function siteUrl(): string {
 
 /** Starts Google sign-in; Supabase returns the visitor to /<lang>/auth/callback/?next=<next>. */
 export async function signInWithGoogle(next: string): Promise<void> {
+  // Without Supabase the sign-in page does not exist; say so instead of opening a dead address.
+  if (!isSupabaseConfigured()) throw new AppError('not_configured');
   const lang = next.startsWith('/hi/') || next === '/hi' ? 'hi' : 'en';
   const redirectTo = `${siteUrl()}/${lang}/auth/callback/?next=${encodeURIComponent(next)}`;
   const { error } = await getSupabase().auth.signInWithOAuth({ provider: 'google', options: { redirectTo } });

@@ -72,7 +72,7 @@ export function Dialog({ open, title, closeLabel, onClose, children, footer }: D
   return createPortal(
     <div
       data-testid="dialog-backdrop"
-      className="fixed inset-0 z-50 flex items-end justify-center bg-ink/50 p-0 sm:items-center sm:p-4"
+      className="fixed inset-0 z-50 flex animate-fade-in items-end justify-center bg-ink/50 p-0 backdrop-blur-sm sm:items-center sm:p-4"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) {
           // Keep focus where it is so it can return to the opener.
@@ -87,13 +87,13 @@ export function Dialog({ open, title, closeLabel, onClose, children, footer }: D
         aria-modal="true"
         aria-labelledby={titleId}
         tabIndex={-1}
-        className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-t-2xl bg-white p-5 shadow-xl sm:rounded-2xl"
+        className="max-h-[90vh] w-full max-w-lg animate-dialog-in overflow-y-auto rounded-t-2xl border-t-8 border-brand bg-white p-5 shadow-2xl sm:rounded-2xl"
       >
         <div className="flex items-start gap-3">
           <h2 id={titleId} className="flex-1 text-xl font-semibold">
             {title}
           </h2>
-          <button type="button" onClick={onClose} aria-label={closeLabel} className="rounded-full p-1.5 hover:bg-brand-light">
+          <button type="button" onClick={onClose} aria-label={closeLabel} className="rounded-full p-1.5 transition duration-300 hover:rotate-90 hover:bg-brand-light">
             <X aria-hidden className="h-5 w-5" />
           </button>
         </div>

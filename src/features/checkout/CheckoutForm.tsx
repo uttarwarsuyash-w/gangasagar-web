@@ -14,6 +14,7 @@ import { localHref, pick } from '@/i18n/localized';
 import type { Lang } from '@/i18n/types';
 import { errorCode } from '@/lib/errors';
 import { formatRupees, formatWeight } from '@/lib/money';
+import { burstFrom } from '@/lib/motion/motion';
 import { normalizePincode } from './pincode';
 import { validateAddress, type AddressInput } from './validation';
 import { PaymentOptions, allowedPaymentMethods } from './PaymentOptions';
@@ -42,6 +43,7 @@ export function CheckoutForm({ lang }: { lang: Lang }) {
   const [formError, setFormError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const inFlight = useRef(false);
+  const submitRef = useRef<HTMLButtonElement>(null);
 
   const pin = normalizePincode(address.pincode);
   const itemsKey = JSON.stringify(items);
@@ -116,6 +118,7 @@ export function CheckoutForm({ lang }: { lang: Lang }) {
           : Object.fromEntries(Object.entries(value).filter(([, v]) => v !== undefined && v !== '')) as unknown as AddressInput,
         note: note.trim() || null,
       });
+      burstFrom(submitRef.current, 50);
       clear();
       router.push(localHref(lang, `/account/order/?id=${id}&placed=1`));
     } catch (e) {
@@ -137,7 +140,7 @@ export function CheckoutForm({ lang }: { lang: Lang }) {
       }}
     >
       <div className="space-y-4">
-        <fieldset className="rounded-2xl border border-ink/10 bg-white p-4">
+        <fieldset className="animate-rise rounded-2xl border border-ink/10 bg-white p-4">
           <legend className="px-1 font-semibold">{t.cart.howToGet}</legend>
           <div className="space-y-2">
             {(['pickup', 'ship'] as const).map((m) => (
@@ -162,7 +165,7 @@ export function CheckoutForm({ lang }: { lang: Lang }) {
           )}
         </fieldset>
 
-        <fieldset className="grid gap-3 rounded-2xl border border-ink/10 bg-white p-4 sm:grid-cols-2">
+        <fieldset className="grid animate-rise gap-3 rounded-2xl border border-ink/10 bg-white p-4 [animation-delay:90ms] sm:grid-cols-2">
           <legend className="px-1 font-semibold">{mode === 'ship' ? c.address : c.contact}</legend>
           <TextField label={c.name} value={address.name} onChange={set('name')} autoComplete="name" error={err('name')} />
           <TextField label={c.phone} value={address.phone} onChange={set('phone')} type="tel" inputMode="tel" autoComplete="tel" hint={c.phoneHint} error={err('phone')} />
@@ -195,7 +198,7 @@ export function CheckoutForm({ lang }: { lang: Lang }) {
         <PaymentOptions lang={lang} zone={zone} fulfilment={fulfilment} value={effectivePayment} onChange={setPayment} />
       </div>
 
-      <aside className="space-y-4">
+      <aside className="animate-rise space-y-4 [animation-delay:160ms]">
         <div className="rounded-2xl border border-ink/10 bg-white p-4">
           {!price ? (
             <Spinner label={t.cart.updating} />
@@ -236,7 +239,12 @@ export function CheckoutForm({ lang }: { lang: Lang }) {
             {formError}
           </p>
         )}
-        <button type="submit" className={`${buttonPrimary} w-full py-3 text-lg`} disabled={submitting}>
+        <button
+          ref={submitRef}
+          type="submit"
+          className={`${buttonPrimary} w-full py-3 text-lg ${submitting ? 'animate-shine bg-[linear-gradient(110deg,var(--color-brand)_35%,#E9586A_50%,var(--color-brand)_65%)] bg-size-[220%_100%]' : ''}`}
+          disabled={submitting}
+        >
           {submitting ? c.placing : c.placeOrder}
         </button>
         <Link href={localHref(lang, '/cart/')} className="block text-center text-brand-dark underline">

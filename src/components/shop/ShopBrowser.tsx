@@ -1,5 +1,6 @@
 'use client';
 
+import { Reveal } from '@/lib/motion/Reveal';
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { Search, Store } from 'lucide-react';
@@ -57,7 +58,7 @@ export function ShopBrowser({ lang, catalog, categorySlug }: { lang: Lang; catal
               <Link
                 href={localHref(lang, '/shop/')}
                 aria-current={!categorySlug ? 'page' : undefined}
-                className={`inline-block whitespace-nowrap rounded-full px-4 py-2 font-medium ${!categorySlug ? 'bg-brand text-white' : 'bg-white ring-1 ring-ink/15 hover:bg-brand-light'}`}
+                className={`inline-block whitespace-nowrap rounded-full px-4 py-2 font-medium transition duration-200 hover:-translate-y-0.5 active:scale-90 ${!categorySlug ? 'bg-brand text-white shadow-[0_3px_0_var(--color-brand-dark)]' : 'bg-white ring-1 ring-ink/15 hover:bg-brand-light'}`}
               >
                 {t.allCategories}
               </Link>
@@ -67,7 +68,7 @@ export function ShopBrowser({ lang, catalog, categorySlug }: { lang: Lang; catal
                 <Link
                   href={localHref(lang, `/shop/${c.slug}/`)}
                   aria-current={categorySlug === c.slug ? 'page' : undefined}
-                  className={`inline-block whitespace-nowrap rounded-full px-4 py-2 font-medium ${categorySlug === c.slug ? 'bg-brand text-white' : 'bg-white ring-1 ring-ink/15 hover:bg-brand-light'}`}
+                  className={`inline-block whitespace-nowrap rounded-full px-4 py-2 font-medium transition duration-200 hover:-translate-y-0.5 active:scale-90 ${categorySlug === c.slug ? 'bg-brand text-white shadow-[0_3px_0_var(--color-brand-dark)]' : 'bg-white ring-1 ring-ink/15 hover:bg-brand-light'}`}
                 >
                   {pick(c as unknown as Record<string, unknown>, 'name', lang)}
                 </Link>
@@ -105,8 +106,10 @@ export function ShopBrowser({ lang, catalog, categorySlug }: { lang: Lang; catal
         <p className="mt-6 text-center text-ink/70">{t.noMatches}</p>
       ) : (
         <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-          {shown.map((p) => (
-            <ProductCard key={p.id} lang={lang} product={p} />
+          {shown.map((p, i) => (
+            <Reveal key={p.id} index={i % 8}>
+              <ProductCard lang={lang} product={p} />
+            </Reveal>
           ))}
         </div>
       )}

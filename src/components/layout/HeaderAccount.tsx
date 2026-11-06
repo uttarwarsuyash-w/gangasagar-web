@@ -7,10 +7,13 @@ import { LogIn, LogOut, Shield } from 'lucide-react';
 import { useIsAdmin } from '@/lib/auth/admin';
 import { signInWithGoogle, signOut, useSession } from '@/lib/auth/session';
 import { localHref } from '@/i18n/localized';
+import { headerPill } from './Header';
+import { useToast } from '@/components/ui/Toast';
+import { errorCode } from '@/lib/errors';
 import { getDictionary } from '@/i18n/get-dictionary';
 import type { Lang } from '@/i18n/types';
 
-const pill = 'inline-flex items-center gap-1.5 rounded-full px-3 py-2 font-medium hover:bg-brand-light disabled:opacity-60';
+const pill = `${headerPill} disabled:opacity-60`;
 
 /** Sign in for visitors; Sign out (and Admin for allowlisted admins) once signed in. */
 export function HeaderAccount({ lang }: { lang: Lang }) {
@@ -19,6 +22,7 @@ export function HeaderAccount({ lang }: { lang: Lang }) {
   const isAdmin = useIsAdmin();
   const pathname = usePathname();
   const [busy, setBusy] = useState(false);
+  const toast = useToast();
 
   if (loading) return null;
 
@@ -33,8 +37,9 @@ export function HeaderAccount({ lang }: { lang: Lang }) {
           setBusy(true);
           try {
             await signInWithGoogle(`${pathname || `/${lang}/`}${window.location.search}`);
-          } catch {
+          } catch (e) {
             setBusy(false);
+            toast.error(errorCode(e) === 'not_configured' ? t.auth.notConfigured : t.auth.signInFailed);
           }
         }}
       >

@@ -24,7 +24,7 @@ export function AdminDashboard({ lang }: { lang: Lang }) {
   ];
   return (
     <section>
-      <h1 className="text-2xl font-bold">{t.admin.dashboard}</h1>
+      <h1 className="font-display text-4xl leading-none font-semibold text-brand-dark animate-rise">{t.admin.dashboard}</h1>
       <div className="mt-4 grid gap-3 sm:grid-cols-3">
         {tiles.map((tile) => (
           <Link key={tile.href} href={localHref(lang, tile.href)} className="rounded-2xl border border-ink/10 bg-white p-5 hover:border-brand/40">

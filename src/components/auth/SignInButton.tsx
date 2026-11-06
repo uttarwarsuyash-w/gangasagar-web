@@ -6,21 +6,22 @@ import { LogIn } from 'lucide-react';
 import { signInWithGoogle } from '@/lib/auth/session';
 import { getDictionary } from '@/i18n/get-dictionary';
 import type { Lang } from '@/i18n/types';
+import { errorCode } from '@/lib/errors';
 
 export function SignInButton({ lang, next, className }: { lang: Lang; next?: string; className?: string }) {
   const t = getDictionary(lang).auth;
   const pathname = usePathname();
   const [busy, setBusy] = useState(false);
-  const [failed, setFailed] = useState(false);
+  const [failed, setFailed] = useState<string | null>(null);
 
   async function onClick() {
     setBusy(true);
-    setFailed(false);
+    setFailed(null);
     try {
       const search = typeof window !== 'undefined' ? window.location.search : '';
       await signInWithGoogle(next ?? `${pathname || `/${lang}/`}${search}`);
-    } catch {
-      setFailed(true);
+    } catch (e) {
+      setFailed(errorCode(e) === 'not_configured' ? t.notConfigured : t.signInFailed);
       setBusy(false);
     }
   }
@@ -39,7 +40,7 @@ export function SignInButton({ lang, next, className }: { lang: Lang; next?: str
         <LogIn aria-hidden className="h-5 w-5" />
         {t.signInWithGoogle}
       </button>
-      {failed && <p role="alert" className="text-sm text-brand-dark">{t.signInFailed}</p>}
+      {failed && <p role="alert" className="max-w-sm text-center text-sm text-brand-dark">{failed}</p>}
     </div>
   );
 }

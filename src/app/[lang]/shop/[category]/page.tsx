@@ -33,7 +33,7 @@ export default async function CategoryPage({ params }: Props) {
     <div className="mx-auto max-w-6xl px-4 py-6">
       {c ? (
         <>
-          <h1 className="mb-4 text-3xl font-bold">{pick(c as unknown as Record<string, unknown>, 'name', lang)}</h1>
+          <h1 className="mb-5 inline-block animate-rise border-b-4 border-accent pb-1 font-display text-5xl leading-none font-semibold text-brand-dark">{pick(c as unknown as Record<string, unknown>, 'name', lang)}</h1>
           <ShopBrowser lang={lang} catalog={catalog} categorySlug={c.slug} />
         </>
       ) : (

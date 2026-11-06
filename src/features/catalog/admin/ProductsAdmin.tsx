@@ -29,7 +29,7 @@ export function ProductsAdmin({ lang }: { lang: Lang }) {
   return (
     <section>
       <div className="flex flex-wrap items-center gap-3">
-        <h1 className="flex-1 text-2xl font-bold">{t.admin.products}</h1>
+        <h1 className="flex-1 font-display text-4xl leading-none font-semibold text-brand-dark animate-rise">{t.admin.products}</h1>
         <Link href={localHref(lang, '/admin/products/edit/')} className={buttonPrimary}>
           <Plus aria-hidden className="h-5 w-5" /> {t.admin.addProduct}
         </Link>

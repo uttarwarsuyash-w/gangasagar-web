@@ -15,7 +15,7 @@ export default async function CartPage({ params }: Props) {
   const lang: Lang = isLang(raw) ? raw : 'en';
   return (
     <div className="mx-auto max-w-6xl px-4 py-6">
-      <h1 className="mb-4 text-3xl font-bold">{getDictionary(lang).cart.title}</h1>
+      <h1 className="mb-5 inline-block animate-rise border-b-4 border-accent pb-1 font-display text-5xl leading-none font-semibold text-brand-dark">{getDictionary(lang).cart.title}</h1>
       <CartView lang={lang} />
     </div>
   );

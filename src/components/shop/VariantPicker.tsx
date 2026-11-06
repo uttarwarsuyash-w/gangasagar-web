@@ -114,7 +114,7 @@ export function VariantPicker({ lang, variants }: { lang: Lang; variants: Public
       )}
 
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-        <span className="text-3xl font-bold text-brand-dark">
+        <span key={selected.id} className="inline-block animate-pop font-display text-5xl leading-none text-brand-dark">
           {selected.is_loose ? fill(t.loosePrice, { price: formatRupees(selected.price) }) : formatRupees(selected.price)}
         </span>
         {onSale && <span className="text-ink/50 line-through">{formatRupees(selected.retail_price)}</span>}

@@ -19,7 +19,7 @@ export function LanguageSwitcher({ lang }: { lang: Lang }) {
       hrefLang={to}
       lang={to}
       aria-label={t.switchLabel}
-      className="inline-flex items-center gap-1.5 rounded-full border border-brand/25 px-3 py-1.5 text-sm font-medium text-brand-dark hover:bg-brand-light"
+      className="group inline-flex h-9 items-center gap-1 rounded-full bg-white px-2.5 text-sm font-semibold text-brand-dark shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md active:scale-90 sm:px-3"
       onClick={(e) => {
         // Keep the query string (e.g. ?id=) when switching language.
         const search = window.location.search;
@@ -29,7 +29,7 @@ export function LanguageSwitcher({ lang }: { lang: Lang }) {
         }
       }}
     >
-      <Languages aria-hidden className="h-4 w-4" />
+      <Languages aria-hidden className="h-4 w-4 transition-transform duration-500 group-hover:rotate-[360deg]" />
       {t.switchTo}
     </Link>
   );

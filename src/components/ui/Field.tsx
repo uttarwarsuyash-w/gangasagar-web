@@ -3,7 +3,7 @@
 import { useId, type ReactNode } from 'react';
 
 const inputClass =
-  'mt-1 block w-full rounded-lg border border-ink/20 bg-white px-3 py-2 text-base focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30 aria-[invalid=true]:border-brand';
+  'mt-1 block w-full rounded-lg border border-ink/20 bg-white px-3 py-2 text-base transition duration-200 focus:-translate-y-px focus:border-brand focus:shadow-md focus:outline-none focus:ring-4 focus:ring-brand/15 aria-[invalid=true]:animate-shake aria-[invalid=true]:border-brand';
 
 interface Base {
   label: string;
@@ -114,7 +114,7 @@ export function Checkbox({ label, checked, onChange }: { label: string; checked:
         type="checkbox"
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
-        className="h-5 w-5 rounded border-ink/30 accent-brand"
+        className="h-5 w-5 rounded border-ink/30 accent-brand transition-transform active:scale-75"
       />
       <label htmlFor={id} className="font-medium">
         {label}
@@ -123,10 +123,10 @@ export function Checkbox({ label, checked, onChange }: { label: string; checked:
   );
 }
 
-export const buttonPrimary =
-  'inline-flex items-center justify-center gap-2 rounded-full bg-brand px-5 py-2.5 font-semibold text-white shadow-sm hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-50';
-export const buttonSecondary =
-  'inline-flex items-center justify-center gap-2 rounded-full border border-brand/30 bg-white px-5 py-2.5 font-semibold text-brand-dark hover:bg-brand-light disabled:cursor-not-allowed disabled:opacity-50';
+const press =
+  'transition duration-200 ease-out hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-95 disabled:translate-y-0 disabled:scale-100 disabled:shadow-none';
+export const buttonPrimary = `relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full bg-brand px-5 py-2.5 font-semibold text-white shadow-[0_3px_0_var(--color-brand-dark)] hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-50 ${press}`;
+export const buttonSecondary = `inline-flex items-center justify-center gap-2 rounded-full border-2 border-brand/25 bg-white px-5 py-2.5 font-semibold text-brand-dark hover:border-brand hover:bg-brand-light disabled:cursor-not-allowed disabled:opacity-50 ${press}`;
 
 /** '' → null, otherwise a number (NaN stays NaN so validation can flag it). */
 export function toNum(v: string): number | null {
