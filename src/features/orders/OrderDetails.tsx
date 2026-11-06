@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { CheckCircle2, MessageCircle, QrCode } from 'lucide-react';
 import { TextField, buttonPrimary } from '@/components/ui/Field';
 import { BUSINESS } from '@/config/business';
@@ -95,13 +95,17 @@ export function OrderDetails({
   payment,
   placed = false,
   onChanged,
+  adminActions,
 }: {
   lang: Lang;
   order: MyOrder;
   payment: PaymentSettings;
   placed?: boolean;
   onChanged: () => void;
+  /** Admin view: shows these actions instead of the customer's UPI box and help link, plus notes and weight. */
+  adminActions?: ReactNode;
 }) {
+  const admin = adminActions !== undefined;
   const t = getDictionary(lang);
   const o = t.order;
   const status = (s: string) => o.statuses[s as keyof typeof o.statuses] ?? s;
@@ -129,7 +133,7 @@ export function OrderDetails({
         {order.invoice_number ? ` · ${o.invoice}: ${order.invoice_number}` : ''}
       </p>
 
-      {needsUpiPayment(order) && <UpiBox lang={lang} order={order} payment={payment} onChanged={onChanged} />}
+      {admin ? adminActions : needsUpiPayment(order) && <UpiBox lang={lang} order={order} payment={payment} onChanged={onChanged} />}
 
       <section className="rounded-2xl border border-ink/10 bg-white p-4">
         <h2 className="font-semibold">{o.items}</h2>
@@ -168,13 +172,26 @@ export function OrderDetails({
           <p className="mt-1 whitespace-pre-line text-ink/80">
             {[a.name, a.phone, a.line1, a.line2, a.landmark, [a.city, a.pincode].filter(Boolean).join(' '), a.state].filter(Boolean).join('\n')}
           </p>
+          {admin && (
+            <p className="mt-2 text-sm text-ink/70">
+              {t.admin.ordersPage.fulfilment[order.fulfilment]} · {t.admin.ordersPage.weight}: {formatWeight(order.weight_g)}
+            </p>
+          )}
         </section>
         <section className="rounded-2xl border border-ink/10 bg-white p-4">
           <h2 className="font-semibold">{o.payment}</h2>
           <p className="mt-1">{payLabel[order.payment_method]}</p>
           <p className="text-sm text-ink/70">{o.paymentStatus[order.payment_status]}</p>
+          {admin && order.upi_reference && <p className="text-sm text-ink/70">{o.reference}: {order.upi_reference}</p>}
         </section>
       </div>
+
+      {admin && order.customer_note && (
+        <section className="rounded-2xl border border-ink/10 bg-white p-4">
+          <h2 className="font-semibold">{t.admin.ordersPage.customerNote}</h2>
+          <p className="mt-1 whitespace-pre-line">{order.customer_note}</p>
+        </section>
+      )}
 
       {order.history.length > 0 && (
         <section className="rounded-2xl border border-ink/10 bg-white p-4">
@@ -182,7 +199,10 @@ export function OrderDetails({
           <ol className="mt-2 space-y-1">
             {order.history.map((h, i) => (
               <li key={i} className="flex justify-between gap-3 text-sm">
-                <span className="font-medium">{status(h.status)}</span>
+                <span>
+                  <span className="font-medium">{status(h.status)}</span>
+                  {admin && h.note && <span className="text-ink/70"> · {h.note}</span>}
+                </span>
                 <span className="text-ink/60">{dateFmt.format(new Date(h.created_at))}</span>
               </li>
             ))}
@@ -190,6 +210,7 @@ export function OrderDetails({
         </section>
       )}
 
+      {!admin && (
       <a
         href={waLink(BUSINESS.whatsapp.main, `${o.questions} ${order.number}`)}
         target="_blank"
@@ -198,6 +219,7 @@ export function OrderDetails({
       >
         <MessageCircle aria-hidden className="h-5 w-5" /> {o.questions}
       </a>
+      )}
     </div>
   );
 }
