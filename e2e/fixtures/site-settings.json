@@ -1,0 +1,11 @@
+{
+  "delivery": {
+    "nanded_free_min_value": 499,
+    "nanded_light_fee": 89,
+    "nanded_heavy_fee": 49,
+    "nanded_heavy_min_g": 2000,
+    "outside_fee": 179,
+    "quotation_min_g": 20000
+  },
+  "payment": { "upi_id": null, "upi_qr_url": null }
+}

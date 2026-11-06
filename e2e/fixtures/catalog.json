@@ -1,0 +1,41 @@
+{
+  "categories": [
+    { "id": "c0000000-0000-4000-8000-000000000001", "slug": "fixture-category", "parent_id": null, "name_en": "Fixture Category", "name_hi": "फिक्स्चर श्रेणी", "image_url": null, "sort": 1 }
+  ],
+  "products": [
+    {
+      "id": "a0000000-0000-4000-8000-000000000001",
+      "slug": "fixture-dal",
+      "category_id": "c0000000-0000-4000-8000-000000000001",
+      "brand": null,
+      "name_en": "Fixture Dal",
+      "name_hi": "फिक्स्चर दाल",
+      "description_en": "Test product used only by the smoke tests.",
+      "description_hi": null,
+      "images": [],
+      "seo_title_en": null,
+      "seo_title_hi": null,
+      "seo_description_en": null,
+      "seo_description_hi": null,
+      "variants": [
+        {
+          "id": "b0000000-0000-4000-8000-000000000001",
+          "product_id": "a0000000-0000-4000-8000-000000000001",
+          "label_en": "1.5 kg",
+          "label_hi": "1.5 किलो",
+          "net_weight_g": 1500,
+          "pack_type": "pouch",
+          "price": 300,
+          "mrp": null,
+          "retail_price": 300,
+          "sale_ends_at": null,
+          "is_loose": false,
+          "loose_min_g": null,
+          "loose_step_g": null,
+          "stock_label": "Available",
+          "sort": 1
+        }
+      ]
+    }
+  ]
+}

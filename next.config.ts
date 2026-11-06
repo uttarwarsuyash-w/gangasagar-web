@@ -1,9 +1,13 @@
 import type { NextConfig } from "next";
 
+// Smoke tests export to their own folder so fixture pages never land in `out`.
+const exportDir = process.env.NEXT_EXPORT_DIR;
+
 const nextConfig: NextConfig = {
-  /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
+  output: "export",
+  ...(exportDir ? { distDir: exportDir } : {}),
+  trailingSlash: true,
+  images: { unoptimized: true },
   turbopack: {
     rules: {
       "*.css": {

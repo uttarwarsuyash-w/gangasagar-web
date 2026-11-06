@@ -1,0 +1,12 @@
+[
+  {
+    "id": "b0000000-0000-4000-8000-000000000001",
+    "label_en": "1.5 kg",
+    "label_hi": "1.5 किलो",
+    "stock_qty": 12,
+    "stock_unit": "packs",
+    "min_stock": 5,
+    "limited_below": 3,
+    "product": { "name_en": "Fixture Dal", "name_hi": "फिक्स्चर दाल" }
+  }
+]
