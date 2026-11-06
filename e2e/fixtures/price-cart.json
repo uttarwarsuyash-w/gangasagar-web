@@ -1,0 +1,14 @@
+{
+  "pickup": {
+    "lines": [
+      { "variant_id": "b0000000-0000-4000-8000-000000000001", "name_en": "Fixture Dal", "name_hi": "फिक्स्चर दाल", "label_en": "1.5 kg", "label_hi": "1.5 किलो", "qty": 1, "grams": null, "unit_price": 300, "line_total": 300, "weight_g": 1500, "stock_label": "Available", "is_loose": false }
+    ],
+    "weight_g": 1500, "subtotal": 300, "zone": null, "delivery_fee": 0, "total": 300, "requires_quotation": false, "errors": []
+  },
+  "delivery-431602": {
+    "lines": [
+      { "variant_id": "b0000000-0000-4000-8000-000000000001", "name_en": "Fixture Dal", "name_hi": "फिक्स्चर दाल", "label_en": "1.5 kg", "label_hi": "1.5 किलो", "qty": 1, "grams": null, "unit_price": 300, "line_total": 300, "weight_g": 1500, "stock_label": "Available", "is_loose": false }
+    ],
+    "weight_g": 1500, "subtotal": 300, "zone": "nanded", "delivery_fee": 89, "total": 389, "requires_quotation": false, "errors": []
+  }
+}
