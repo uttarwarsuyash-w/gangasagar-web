@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+!.env.example
+
+# plan execution scratch, test output
+.superpowers/
+/test-results/
+/playwright-report/
