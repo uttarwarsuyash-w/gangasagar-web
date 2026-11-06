@@ -7,7 +7,7 @@ import { LogIn, LogOut, Shield } from 'lucide-react';
 import { useIsAdmin } from '@/lib/auth/admin';
 import { signInWithGoogle, signOut, useSession } from '@/lib/auth/session';
 import { localHref } from '@/i18n/localized';
-import { headerPill } from './Header';
+import { headerPill } from './header-pill';
 import { useToast } from '@/components/ui/Toast';
 import { errorCode } from '@/lib/errors';
 import { getDictionary } from '@/i18n/get-dictionary';

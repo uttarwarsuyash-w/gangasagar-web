@@ -7,7 +7,7 @@ import { useCart } from '@/features/cart/store';
 import { localHref } from '@/i18n/localized';
 import type { Lang } from '@/i18n/types';
 import { CART_BUMP } from '@/lib/motion/motion';
-import { headerPill } from './Header';
+import { headerPill } from './header-pill';
 
 export function HeaderCartLink({ lang, label }: { lang: Lang; label: string }) {
   const { count } = useCart();

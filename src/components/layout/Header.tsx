@@ -6,9 +6,8 @@ import type { Lang } from '@/i18n/types';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { HeaderCartLink } from './HeaderCartLink';
 import { HeaderAccount } from './HeaderAccount';
+import { headerPill } from './header-pill';
 
-export const headerPill =
-  'inline-flex h-10 items-center gap-1.5 rounded-full px-2.5 font-medium text-white transition duration-200 hover:-translate-y-0.5 hover:bg-white/15 active:scale-90 sm:px-3';
 
 /** The shop's red signboard, as a sticky header. */
 export function Header({ lang }: { lang: Lang }) {
